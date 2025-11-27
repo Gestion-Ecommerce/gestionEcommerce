@@ -4,16 +4,25 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "clientes")
 public class Cliente {
 	
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
 	
+	@Column(name="nombre_completo")
 	private String nombreCompleto;
+	
+	@Column(name="email")
 	private String email;
+	
+	@Column(name="fecha_creacion")
 	private LocalDate fechaCreacion;
 	
 	// TODO añadir relación con tabla Informacion Fiscal
@@ -76,5 +85,4 @@ public class Cliente {
 			return super.equals(obj);
 		return nif_cif == cliente.nif_cif;
 	}
-	
 }

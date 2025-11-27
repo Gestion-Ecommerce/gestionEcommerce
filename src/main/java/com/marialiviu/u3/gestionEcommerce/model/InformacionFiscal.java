@@ -71,8 +71,4 @@ public class InformacionFiscal {
 	public String toString() {
 		return "InformacionFiscal [nif_cif=" + nif_cif + ", telefono=" + telefono + ", direccion=" + direccion + "]";
 	}
-	
-	
-	
-	
 }
