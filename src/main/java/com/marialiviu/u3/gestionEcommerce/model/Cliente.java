@@ -8,6 +8,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Clase que representa un cliente.
+ *
+ * TODO
+ * <p><b>Ejemplo de uso:</b></p>
+ * <pre>{@code
+ * Cliente cliente = new Cliente();
+ * System.out.println(cliente.getEmail()); // Imprime:
+ * }</pre>
+ *
+ * @author María
+ * @version 1.0
+ * @since 2025-11-27
+ */
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {

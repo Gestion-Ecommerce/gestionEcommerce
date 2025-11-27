@@ -7,6 +7,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Clase que representa la información fiscal de un cliente.
+ *
+ * TODO
+ * <p><b>Ejemplo de uso:</b></p>
+ * <pre>{@code
+ * InformacionFiscal info = new InformacionFiscal();
+ * System.out.println(info.getDireccion()); // Imprime:
+ * }</pre>
+ *
+ * @author María
+ * @version 1.0
+ * @since 2025-11-27
+ */
+
 @Entity
 @Table(name = "informacion_fiscal")
 public class InformacionFiscal {

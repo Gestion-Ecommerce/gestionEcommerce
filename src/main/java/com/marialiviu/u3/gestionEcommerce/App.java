@@ -20,9 +20,11 @@ public class App {
 			
 			//TODO
 			
+			
 		} catch (Exception e) {
 			System.err.println("¡Error en la transacción!");
 			e.printStackTrace();
+			//TODO
 			
 		} finally {
 			if(em != null) {
