@@ -1,0 +1,17 @@
+docker run -d `
+    --name ecommerce_mariadb `
+    -p 3306:3306 `
+    -e MARIADB_DATABASE=ecommerce_bd `
+    -e MARIADB_ROOT_PASSWORD=Abcd1234 `
+    -v ecommerce_mariadb_data:/var/lib/mysql `
+    -v ecommerce_mariadb_logs:/var/log/mysql `
+    -v ecommerce_mariadb_conf:/etc/mysql/conf.d `
+    mariadb:latest
+    
+    
+    
+    
+    OJO con este comando:
+    -e MARIADB_DATABASE=ecommerce_bd `
+    --character-set-server=utf8mb4 `
+    --collation-server=utf8mb4_unicode_ci `
