@@ -53,7 +53,6 @@ ENGINE=InnoDB;
 -- Articulo_Compra
 -- Relacion N:M
 CREATE TABLE IF NOT EXISTS articulo_compra (
-	id INT PRIMARY KEY AUTO_INCREMENT,
 	id_compra INT NOT NULL,
 	id_articulo INT NOT NULL,
 	unidades INT NOT NULL,
