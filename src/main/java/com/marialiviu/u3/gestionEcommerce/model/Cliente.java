@@ -4,9 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -19,10 +23,11 @@ import jakarta.persistence.Table;
  *
  * Campos principales:
  * <ul>
- *   <li><b>nif_cif</b> - Identificador único del cliente (clave primaria).</li>
- *   <li><b>nombreCompleto</b> - Nombre y apellidos del cliente.</li>
- *   <li><b>email</b> - Dirección de correo electrónico.</li>
- *   <li><b>fechaCreacion</b> - Fecha en la que se creó el registro del cliente.</li>
+ * <li><b>nif_cif</b> - Identificador único del cliente (clave primaria).</li>
+ * <li><b>nombreCompleto</b> - Nombre y apellidos del cliente.</li>
+ * <li><b>email</b> - Dirección de correo electrónico.</li>
+ * <li><b>fechaCreacion</b> - Fecha en la que se creó el registro del
+ * cliente.</li>
  * </ul>
  *
  * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
@@ -54,40 +59,50 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "clientes")
 public class Cliente {
-	
+
 	/**
-	 * NIF/CIF que identifica de forma única la información fiscal.
-	 * Es la clave primaria de la tabla.
+	 * NIF/CIF que identifica de forma única la información fiscal. Es la clave
+	 * primaria de la tabla.
 	 */
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
-	
+
 	/**
 	 * Nombre completo del cliente.
 	 */
-	@Column(name="nombre_completo")
+	@Column(name = "nombre_completo")
 	private String nombreCompleto;
-	
+
 	/**
-	 * Correo electrónico del cliente con el que hace la compra. 
+	 * Correo electrónico del cliente con el que hace la compra.
 	 */
-	@Column(name="email")
+	@Column(name = "email")
 	private String email;
-	
+
 	/**
 	 * Fecha y hora en la que se crea el cliente.
 	 */
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private LocalDate fechaCreacion;
+
 	
+	
+
+	// TODO añadir relación con tabla Informacion Fiscal
+	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private InformacionFiscal informacionFiscal;
+
 	/**
 	 * Array de las compras que hace el cliente.
 	 */
+	// TODO añadir relacion con tabla Compra
+	
 	private List<Compra> compras;
 	
-	// TODO añadir relación con tabla Informacion Fiscal
-	
+	/**
+	 * Constructor que crea un objeto Cliente con valores por defecto.
+	 */
 	public Cliente() {
 		this.nif_cif = "";
 		this.nombreCompleto = "";
@@ -95,13 +110,19 @@ public class Cliente {
 		this.fechaCreacion = LocalDate.now();
 	}
 
+	/**
+	 * Constructor que crea un objeto Cliente por parámetros. Si no se le pasan
+	 * parámetros, se pondrá un valor por defecto.
+	 * 
+	 * @param nif_cif, nombreCompleto y email.
+	 */
 	public Cliente(String nif_cif, String nombreCompleto, String email) {
 		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 		this.nombreCompleto = (nombreCompleto != null) ? nombreCompleto.trim() : "";
 		this.email = (email != null) ? email.trim() : "";
 		this.fechaCreacion = LocalDate.now();
 	}
-	
+
 	/**
 	 * Obtiene el NIF/CIF.
 	 *
@@ -123,7 +144,8 @@ public class Cliente {
 	/**
 	 * Obtiene el nombre completo del cliente.
 	 *
-	 * @return el nombre del cliente. Si no tiene nombre, retornará una cadena vacía.
+	 * @return el nombre del cliente. Si no tiene nombre, retornará una cadena
+	 *         vacía.
 	 */
 	public String getNombreCompleto() {
 		return nombreCompleto;
@@ -174,17 +196,60 @@ public class Cliente {
 		this.fechaCreacion = LocalDate.now();
 	}
 
+	public void setInformacionFiscal(InformacionFiscal info) {
+		this.informacionFiscal = info;
+		if (info != null && info.getCliente() != this) {
+			info.setCliente(this);
+		}
+	}
+
+	public InformacionFiscal getInformacionFiscal() {
+		return informacionFiscal;
+	}
+
+	/**
+	 * Representación en cadena de la instancia, útil para depuración.
+	 * <p>
+	 * Incluye el {@code nif_cif}, el {@code nombreCompleto}, el {@code email} y la
+	 * {@code fechaCreacion}.
+	 * </p>
+	 *
+	 * @return representación textual no nula de la entidad
+	 */
 	@Override
 	public String toString() {
 		return "Cliente [nif_cif=" + nif_cif + ", nombreCompleto=" + nombreCompleto + ", email=" + email
 				+ ", fechaCreacion=" + fechaCreacion + "]";
 	}
 
+	/**
+	 * Calcula el código hash consistente con {@link #equals(Object)}.
+	 * <p>
+	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor. En
+	 * caso contrario se delega en {@link System#identityHashCode(Object)} para
+	 * evitar que dos instancias sin identificador aparente colisionen como si
+	 * tuvieran la misma identidad lógica.
+	 * </p>
+	 *
+	 * @return el código hash de la instancia
+	 */
+
 	@Override
 	public int hashCode() {
 		return nif_cif != null ? Objects.hash(nif_cif) : System.identityHashCode(this);
 	}
 
+	/**
+	 * Calcula el código hash consistente con {@link #equals(Object)}.
+	 * <p>
+	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor. En
+	 * caso contrario se delega en {@link System#identityHashCode(Object)} para
+	 * evitar que dos instancias sin identificador aparente colisionen como si
+	 * tuvieran la misma identidad lógica.
+	 * </p>
+	 *
+	 * @return el código hash de la instancia
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

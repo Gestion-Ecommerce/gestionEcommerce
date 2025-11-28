@@ -5,28 +5,32 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
  * Representa un cliente del sistema de gestión del e-commerce.
  * <p>
- * Esta entidad se mapea a la tabla <code>informacion_fiscal</code> de la base de datos
- * mediante JPA. El identificador único de la entidad es el campo
+ * Esta entidad se mapea a la tabla <code>informacion_fiscal</code> de la base
+ * de datos mediante JPA. El identificador único de la entidad es el campo
  * {@link #nif_cif}, que corresponde al NIF/CIF del cliente.
  * </p>
  *
  * Campos principales:
  * <ul>
- *   <li><b>nif_cif</b> - Identificador único del cliente (clave primaria).</li>
- *   <li><b>telefono</b> - Número de teléfono del cliente.</li>
- *   <li><b>direccion</b> - Dirección del cliente.</li>
+ * <li><b>nif_cif</b> - Identificador único del cliente (clave primaria).</li>
+ * <li><b>telefono</b> - Número de teléfono del cliente.</li>
+ * <li><b>direccion</b> - Dirección del cliente.</li>
  * </ul>
  *
  * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
  * {@code hashCode} basándose en el {@code nif_cif} cuando éste está presente.
- * Esto permite que la identidad lógica de la información fiscal dependa de su NIF/CIF,
- * mientras que si el identificador es nulo se recurre al comportamiento por
- * defecto de {@code Object} para evitar colisiones prematuras.
+ * Esto permite que la identidad lógica de la información fiscal dependa de su
+ * NIF/CIF, mientras que si el identificador es nulo se recurre al
+ * comportamiento por defecto de {@code Object} para evitar colisiones
+ * prematuras.
  *
  * TODO
  * <p>
@@ -50,21 +54,21 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "informacion_fiscal")
 public class InformacionFiscal {
-	
+
 	/**
-	 * NIF/CIF que identifica de forma única la información fiscal.
-	 * Es la clave primaria de la tabla.
+	 * NIF/CIF que identifica de forma única la información fiscal. Es la clave
+	 * primaria de la tabla.
 	 */
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
-	
+
 	/**
 	 * Teléfono de contacto asociado a la información fiscal.
 	 */
 	@Column(name = "telefono")
 	private String telefono;
-	
+
 	/**
 	 * Dirección fiscal completa.
 	 */
@@ -72,13 +76,26 @@ public class InformacionFiscal {
 	private String direccion;
 
 	// TODO añadir la relacion con tabla Cliente
+	@OneToOne
+	@MapsId // hace que esta entidad use la misma PK que cliente
+	@JoinColumn(name = "nif_cif")
+	private Cliente cliente;
 
+	/**
+	 * Constructor que crea un objeto Información Fiscal con valores por defecto.
+	 */
 	public InformacionFiscal() {
 		this.nif_cif = "";
 		this.telefono = "";
 		this.direccion = "";
-	} 
-	
+	}
+
+	/**
+	 * Constructor que crea un objeto Información Fiscal por parámetros. Si no se le
+	 * pasan parámetros, se pondrá un valor por defecto.
+	 * 
+	 * @param nif_cif, telefono y dirección
+	 */
 	public InformacionFiscal(String nif_cif, String telefono, String direccion) {
 		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 		this.telefono = (telefono != null) ? telefono.trim() : "";
@@ -139,13 +156,22 @@ public class InformacionFiscal {
 		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
+	public void setCliente(Cliente c) {
+		this.cliente = c;
+		this.nif_cif = (c != null) ? c.getNif_cif() : null;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
 	/**
 	 * Calcula el código hash consistente con {@link #equals(Object)}.
 	 * <p>
-	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor.
-	 * En caso contrario se delega en {@link System#identityHashCode(Object)}
-	 * para evitar que dos instancias sin identificador aparente colisionen
-	 * como si tuvieran la misma identidad lógica.
+	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor. En
+	 * caso contrario se delega en {@link System#identityHashCode(Object)} para
+	 * evitar que dos instancias sin identificador aparente colisionen como si
+	 * tuvieran la misma identidad lógica.
 	 * </p>
 	 *
 	 * @return el código hash de la instancia
@@ -158,9 +184,10 @@ public class InformacionFiscal {
 	/**
 	 * Comprueba la igualdad lógica entre esta instancia y otro objeto.
 	 * <p>
-	 * Dos instancias de {@code InformacionFiscal} se consideran iguales si
-	 * ambos son del mismo tipo y tienen el mismo {@code nif_cif}. La comparación
-	 * maneja correctamente valores {@code null} mediante {@link java.util.Objects#equals(Object, Object)}.
+	 * Dos instancias de {@code InformacionFiscal} se consideran iguales si ambos
+	 * son del mismo tipo y tienen el mismo {@code nif_cif}. La comparación maneja
+	 * correctamente valores {@code null} mediante
+	 * {@link java.util.Objects#equals(Object, Object)}.
 	 * </p>
 	 *
 	 * @param obj el objeto a comparar
