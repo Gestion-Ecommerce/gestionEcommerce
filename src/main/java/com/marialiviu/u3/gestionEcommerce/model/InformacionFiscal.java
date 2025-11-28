@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
  *
  * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
  * {@code hashCode} basándose en el {@code nif_cif} cuando éste está presente.
- * Esto permite que la identidad lógica del cliente dependa de su NIF/CIF,
+ * Esto permite que la identidad lógica de la información fiscal dependa de su NIF/CIF,
  * mientras que si el identificador es nulo se recurre al comportamiento por
  * defecto de {@code Object} para evitar colisiones prematuras.
  *
@@ -34,10 +34,10 @@ import jakarta.persistence.Table;
  * </p>
  * 
  * <pre>{@code
- * Cliente c = new Cliente();
- * c.setNif_cif("12345678A");
- * c.setTelefono("926874632");
- * c.setDireccion("Calle Prueba, 25, 13000, Ciudad Real");
+ * InformacionFiscal info = new InformacionFiscal();
+ * info.setNif_cif("12345678A");
+ * info.setTelefono("926874632");
+ * info.setDireccion("Calle Prueba, 25, 13000, Ciudad Real");
  * System.out.println(c.getTelefono()); // imprime: 926874632
  * }</pre>
  *
@@ -73,10 +73,16 @@ public class InformacionFiscal {
 
 	// TODO añadir la relacion con tabla Cliente
 
+	public InformacionFiscal() {
+		this.nif_cif = "";
+		this.telefono = "";
+		this.direccion = "";
+	} 
+	
 	public InformacionFiscal(String nif_cif, String telefono, String direccion) {
-		this.nif_cif = nif_cif;
-		this.telefono = telefono;
-		this.direccion = direccion;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
+		this.telefono = (telefono != null) ? telefono.trim() : "";
+		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class InformacionFiscal {
 	 * @param nif_cif el NIF/CIF a asignar.
 	 */
 	public void setNif_cif(String nif_cif) {
-		this.nif_cif = nif_cif;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 	}
 
 	/**
@@ -112,7 +118,7 @@ public class InformacionFiscal {
 	 * @param telefono el teléfono a asignar.
 	 */
 	public void setTelefono(String telefono) {
-		this.telefono = telefono;
+		this.telefono = (telefono != null) ? telefono.trim() : "";
 	}
 
 	/**
@@ -130,14 +136,37 @@ public class InformacionFiscal {
 	 * @param direccion la dirección a asignar.
 	 */
 	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
+	/**
+	 * Calcula el código hash consistente con {@link #equals(Object)}.
+	 * <p>
+	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor.
+	 * En caso contrario se delega en {@link System#identityHashCode(Object)}
+	 * para evitar que dos instancias sin identificador aparente colisionen
+	 * como si tuvieran la misma identidad lógica.
+	 * </p>
+	 *
+	 * @return el código hash de la instancia
+	 */
 	@Override
 	public int hashCode() {
 		return nif_cif != null ? Objects.hash(nif_cif) : System.identityHashCode(this);
 	}
 
+	/**
+	 * Comprueba la igualdad lógica entre esta instancia y otro objeto.
+	 * <p>
+	 * Dos instancias de {@code InformacionFiscal} se consideran iguales si
+	 * ambos son del mismo tipo y tienen el mismo {@code nif_cif}. La comparación
+	 * maneja correctamente valores {@code null} mediante {@link java.util.Objects#equals(Object, Object)}.
+	 * </p>
+	 *
+	 * @param obj el objeto a comparar
+	 * @return {@code true} si los objetos son iguales según la definición anterior,
+	 *         {@code false} en caso contrario
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -149,6 +178,14 @@ public class InformacionFiscal {
 		return Objects.equals(nif_cif, other.nif_cif);
 	}
 
+	/**
+	 * Representación en cadena de la instancia, útil para depuración.
+	 * <p>
+	 * Incluye el {@code nif_cif}, el {@code telefono} y la {@code direccion}.
+	 * </p>
+	 *
+	 * @return representación textual no nula de la entidad
+	 */
 	@Override
 	public String toString() {
 		return "InformacionFiscal [nif_cif=" + nif_cif + ", telefono=" + telefono + ", direccion=" + direccion + "]";
