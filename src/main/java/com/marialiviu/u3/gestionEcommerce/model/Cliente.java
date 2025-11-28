@@ -12,7 +12,10 @@ import jakarta.persistence.Table;
  * Clase que representa un cliente.
  *
  * TODO
- * <p><b>Ejemplo de uso:</b></p>
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
  * <pre>{@code
  * Cliente cliente = new Cliente();
  * System.out.println(cliente.getEmail()); // Imprime:
@@ -26,24 +29,24 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "clientes")
 public class Cliente {
-	
+
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
-	
-	@Column(name="nombre_completo")
+
+	@Column(name = "nombre_completo")
 	private String nombreCompleto;
-	
-	@Column(name="email")
+
+	@Column(name = "email")
 	private String email;
-	
-	@Column(name="fecha_creacion")
+
+	@Column(name = "fecha_creacion")
 	private LocalDate fechaCreacion;
-	
+
 	// TODO añadir relación con tabla Informacion Fiscal
-	
+
 	public Cliente() {
-		
+
 	}
 
 	public String getNif_cif() {

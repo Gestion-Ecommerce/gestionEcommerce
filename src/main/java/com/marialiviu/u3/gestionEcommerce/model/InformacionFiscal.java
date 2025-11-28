@@ -11,7 +11,10 @@ import jakarta.persistence.Table;
  * Clase que representa la información fiscal de un cliente.
  *
  * TODO
- * <p><b>Ejemplo de uso:</b></p>
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
  * <pre>{@code
  * InformacionFiscal info = new InformacionFiscal();
  * System.out.println(info.getDireccion()); // Imprime:
@@ -25,19 +28,19 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "informacion_fiscal")
 public class InformacionFiscal {
-	
+
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
-	
+
 	@Column(name = "telefono")
 	private String telefono;
-	
+
 	@Column(name = "direccion", columnDefinition = "LONGTEXT")
 	private String direccion;
-	
+
 	// TODO añadir la relacion con tabla Cliente
-	
+
 	public InformacionFiscal() {
 	}
 

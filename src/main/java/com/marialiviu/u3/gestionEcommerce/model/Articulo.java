@@ -8,27 +8,27 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "articulos")
 public class Articulo {
-	
+
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="nombre")
+
+	@Column(name = "nombre")
 	private String nombre;
-	
-	@Column(name="descripcion")
+
+	@Column(name = "descripcion")
 	private String descripcion;
-	
-	@Column(name="precio_actual")
+
+	@Column(name = "precio_actual")
 	private float precioActual;
-	
-	@Column(name="stock")
+
+	@Column(name = "stock")
 	private int stock;
-	
+
 	// TODO añadir relación con tabla ArticuloCompra
-	
+
 	public Articulo() {
-		
+
 	}
 
 	public int getId() {
@@ -70,13 +70,13 @@ public class Articulo {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Articulo [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precioActual="
 				+ precioActual + ", stock=" + stock + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -84,7 +84,7 @@ public class Articulo {
 		result = prime * result + id;
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -8,23 +8,23 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "articulo_compra")
 public class ArticuloCompra {
-	
+
 	@Id
-	@Column(name="id_compra")
+	@Column(name = "id_compra")
 	private int idCompra;
-	
+
 	@Id
-	@Column(name="id_articulo")
+	@Column(name = "id_articulo")
 	private int idArticulo;
-	
-	@Column(name="unidades")
+
+	@Column(name = "unidades")
 	private int unidades;
-	
-	@Column(name="precio_compra")
+
+	@Column(name = "precio_compra")
 	private float precioCompra;
-	
+
 	public ArticuloCompra() {
-		
+
 	}
 
 	public int getIdCompra() {
@@ -58,13 +58,13 @@ public class ArticuloCompra {
 	public void setPrecioCompra(float precioCompra) {
 		this.precioCompra = precioCompra;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ArticuloCompra [idCompra=" + idCompra + ", idArticulo=" + idArticulo + ", unidades=" + unidades
 				+ ", precioCompra=" + precioCompra + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -73,7 +73,7 @@ public class ArticuloCompra {
 		result = prime * result + idCompra;
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
