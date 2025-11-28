@@ -22,12 +22,19 @@ public class ArticuloCompra {
 
 	@Column(name = "precio_compra")
 	private float precioCompra;
-
+	
+	public ArticuloCompra() {
+		this.idCompra = 0;
+		this.idArticulo = 0;
+		this.unidades = 0;
+		this.precioCompra = 0;
+	}
+	
 	public ArticuloCompra(int idCompra, int idArticulo, int unidades, float precioCompra) {
-		this.idCompra = idCompra;
-		this.idArticulo = idArticulo;
-		this.unidades = unidades;
-		this.precioCompra = precioCompra;
+		this.idCompra = (idCompra > 0) ? idCompra : 0;
+		this.idArticulo = (idArticulo > 0) ? idArticulo : 0;
+		this.unidades = (unidades >= 0) ? unidades : 0;
+		this.precioCompra = (precioCompra >= 0) ? precioCompra : 0;
 
 	}
 
@@ -36,7 +43,7 @@ public class ArticuloCompra {
 	}
 
 	public void setIdCompra(int idCompra) {
-		this.idCompra = idCompra;
+		this.idCompra = (idCompra > 0) ? idCompra : 0;
 	}
 
 	public int getIdArticulo() {
@@ -44,7 +51,7 @@ public class ArticuloCompra {
 	}
 
 	public void setIdArticulo(int idArticulo) {
-		this.idArticulo = idArticulo;
+		this.idArticulo = (idArticulo > 0) ? idArticulo : 0;
 	}
 
 	public int getUnidades() {
@@ -52,7 +59,7 @@ public class ArticuloCompra {
 	}
 
 	public void setUnidades(int unidades) {
-		this.unidades = unidades;
+		this.unidades = (unidades >= 0) ? unidades : 0;
 	}
 
 	public float getPrecioCompra() {
@@ -60,7 +67,7 @@ public class ArticuloCompra {
 	}
 
 	public void setPrecioCompra(float precioCompra) {
-		this.precioCompra = precioCompra;
+		this.precioCompra = (precioCompra >= 0) ? precioCompra : 0;
 	}
 
 	@Override
