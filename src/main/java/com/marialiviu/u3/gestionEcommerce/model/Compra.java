@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 
 @Entity
 @Table(name = "compras")
@@ -40,11 +42,8 @@ public class Compra {
 	@Column(name = "precio_total")
 	private float precioTotal;
 
-	// Relación N:M vía tabla intermedia ArticuloCompra
-	@OneToMany(mappedBy = "compra")
+	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
-
-	// TODO añadir relación con tabla Cliente (N:M)
 	
 	public Compra() {
 		this.id = 0;
@@ -110,6 +109,18 @@ public class Compra {
 
 	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
 		this.articuloCompras = articuloCompras;
+	}
+
+	public void addArticuloCompra(ArticuloCompra ac) {
+		if (ac == null) return;
+		ac.setCompra(this);
+		this.articuloCompras.add(ac);
+	}
+
+	public void removeArticuloCompra(ArticuloCompra ac) {
+		if (ac == null) return;
+		this.articuloCompras.remove(ac);
+		ac.setCompra(null);
 	}
 
 	@Override

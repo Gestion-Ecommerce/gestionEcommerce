@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +31,7 @@ public class Articulo {
 	@Column(name = "stock")
 	private int stock;
 
-	@OneToMany(mappedBy = "articulo")
+	@OneToMany(mappedBy = "articulo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
 
 	public Articulo() {
@@ -94,6 +96,18 @@ public class Articulo {
 
 	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
 		this.articuloCompras = articuloCompras;
+	}
+
+	public void addArticuloCompra(ArticuloCompra ac) {
+		if (ac == null) return;
+		ac.setArticulo(this);
+		this.articuloCompras.add(ac);
+	}
+
+	public void removeArticuloCompra(ArticuloCompra ac) {
+		if (ac == null) return;
+		this.articuloCompras.remove(ac);
+		ac.setArticulo(null);
 	}
 
 	@Override
