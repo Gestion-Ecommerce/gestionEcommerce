@@ -1,6 +1,8 @@
 package com.marialiviu.u3.gestionEcommerce.model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Table(name = "compras")
@@ -37,7 +40,11 @@ public class Compra {
 	@Column(name = "precio_total")
 	private float precioTotal;
 
-	// TODO añadir relación con tabla ArticuloCompra
+	// Relación N:M vía tabla intermedia ArticuloCompra
+	@OneToMany(mappedBy = "compra")
+	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
+
+	// TODO añadir relación con tabla Cliente (N:M)
 	
 	public Compra() {
 		this.id = 0;
@@ -45,14 +52,16 @@ public class Compra {
 		this.fechaCompra = LocalDate.now();
 		this.estado = EstadoCompra.PENDIENTE;
 		this.precioTotal = 0;
+		this.articuloCompras = new HashSet<>();
 	}
-	
+
 	public Compra(int id, String idCliente, LocalDate fechaCompra, EstadoCompra estado, float precioTotal) {
 		this.id = (id > 0) ? id : 0;
 		this.idCliente = (idCliente != null) ? idCliente.trim() : "";
 		this.fechaCompra = (fechaCompra != null) ? fechaCompra : LocalDate.now();
 		this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
 		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
+		this.articuloCompras = new HashSet<>();
 	}
 
 	public int getId() {
@@ -95,10 +104,18 @@ public class Compra {
 		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
 	}
 
+	public Set<ArticuloCompra> getArticuloCompras() {
+		return articuloCompras;
+	}
+
+	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
+		this.articuloCompras = articuloCompras;
+	}
+
 	@Override
 	public String toString() {
 		return "Compra [id=" + id + ", idCliente=" + idCliente + ", fechaCompra=" + fechaCompra + ", estado=" + estado
-				+ ", precioTotal=" + precioTotal + "]";
+				+ ", precioTotal=" + precioTotal + ", items=" + articuloCompras.size() + "]";
 	}
 
 	@Override

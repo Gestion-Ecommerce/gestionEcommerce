@@ -4,18 +4,24 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "articulo_compra")
+@IdClass(ArticuloCompraPK.class)
 public class ArticuloCompra {
 
 	@Id
-	@Column(name = "id_compra")
-	private int idCompra;
+	@ManyToOne
+	@JoinColumn(name = "id_compra", referencedColumnName = "id")
+	private Compra compra;
 
 	@Id
-	@Column(name = "id_articulo")
-	private int idArticulo;
+	@ManyToOne
+	@JoinColumn(name = "id_articulo", referencedColumnName = "id")
+	private Articulo articulo;
 
 	@Column(name = "unidades")
 	private int unidades;
@@ -24,34 +30,34 @@ public class ArticuloCompra {
 	private float precioCompra;
 	
 	public ArticuloCompra() {
-		this.idCompra = 0;
-		this.idArticulo = 0;
+		this.compra = null;
+		this.articulo = null;
 		this.unidades = 0;
 		this.precioCompra = 0;
 	}
 	
-	public ArticuloCompra(int idCompra, int idArticulo, int unidades, float precioCompra) {
-		this.idCompra = (idCompra > 0) ? idCompra : 0;
-		this.idArticulo = (idArticulo > 0) ? idArticulo : 0;
+	public ArticuloCompra(Compra compra, Articulo articulo, int unidades, float precioCompra) {
+		this.compra = compra;
+		this.articulo = articulo;
 		this.unidades = (unidades >= 0) ? unidades : 0;
 		this.precioCompra = (precioCompra >= 0) ? precioCompra : 0;
 
 	}
 
-	public int getIdCompra() {
-		return idCompra;
+	public Compra getCompra() {
+		return compra;
 	}
 
-	public void setIdCompra(int idCompra) {
-		this.idCompra = (idCompra > 0) ? idCompra : 0;
+	public void setCompra(Compra compra) {
+		this.compra = compra;
 	}
 
-	public int getIdArticulo() {
-		return idArticulo;
+	public Articulo getArticulo() {
+		return articulo;
 	}
 
-	public void setIdArticulo(int idArticulo) {
-		this.idArticulo = (idArticulo > 0) ? idArticulo : 0;
+	public void setArticulo(Articulo articulo) {
+		this.articulo = articulo;
 	}
 
 	public int getUnidades() {
@@ -72,7 +78,9 @@ public class ArticuloCompra {
 
 	@Override
 	public String toString() {
-		return "ArticuloCompra [idCompra=" + idCompra + ", idArticulo=" + idArticulo + ", unidades=" + unidades
+		int idC = (compra != null) ? compra.getId() : 0;
+		int idA = (articulo != null) ? articulo.getId() : 0;
+		return "ArticuloCompra [idCompra=" + idC + ", idArticulo=" + idA + ", unidades=" + unidades
 				+ ", precioCompra=" + precioCompra + "]";
 	}
 
@@ -80,8 +88,10 @@ public class ArticuloCompra {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idArticulo;
-		result = prime * result + idCompra;
+		int idA = (articulo != null) ? articulo.getId() : 0;
+		int idC = (compra != null) ? compra.getId() : 0;
+		result = prime * result + idA;
+		result = prime * result + idC;
 		return result;
 	}
 
@@ -94,9 +104,13 @@ public class ArticuloCompra {
 		if (getClass() != obj.getClass())
 			return false;
 		ArticuloCompra other = (ArticuloCompra) obj;
-		if (idArticulo != other.idArticulo)
+		int idA = (articulo != null) ? articulo.getId() : 0;
+		int otherIdA = (other.articulo != null) ? other.articulo.getId() : 0;
+		if (idA != otherIdA)
 			return false;
-		if (idCompra != other.idCompra)
+		int idC = (compra != null) ? compra.getId() : 0;
+		int otherIdC = (other.compra != null) ? other.compra.getId() : 0;
+		if (idC != otherIdC)
 			return false;
 		return true;
 	}

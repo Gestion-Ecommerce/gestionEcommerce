@@ -4,6 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "articulos")
@@ -25,7 +29,8 @@ public class Articulo {
 	@Column(name = "stock")
 	private int stock;
 
-	// TODO añadir relación con tabla ArticuloCompra
+	@OneToMany(mappedBy = "articulo")
+	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
 
 	public Articulo() {
 		this.id = 0;
@@ -83,10 +88,18 @@ public class Articulo {
 		this.stock = (stock >= 0) ? stock : 0;
 	}
 
+	public Set<ArticuloCompra> getArticuloCompras() {
+		return articuloCompras;
+	}
+
+	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
+		this.articuloCompras = articuloCompras;
+	}
+
 	@Override
 	public String toString() {
 		return "Articulo [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precioActual="
-				+ precioActual + ", stock=" + stock + "]";
+				+ precioActual + ", stock=" + stock + ", ventas=" + articuloCompras.size() + "]";
 	}
 
 	@Override
