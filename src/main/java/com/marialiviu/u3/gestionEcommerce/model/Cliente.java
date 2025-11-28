@@ -88,11 +88,11 @@ public class Cliente {
 	
 	// TODO añadir relación con tabla Informacion Fiscal
 
-	public Cliente(String nif_cif, String nombreCompleto, String email, LocalDate fechaCreacion) {
+	public Cliente(String nif_cif, String nombreCompleto, String email) {
 		this.nif_cif = nif_cif;
 		this.nombreCompleto = nombreCompleto;
 		this.email = email;
-		this.fechaCreacion = fechaCreacion;
+		this.fechaCreacion = LocalDate.now();
 	}
 	
 	/**
@@ -122,6 +122,11 @@ public class Cliente {
 		return nombreCompleto;
 	}
 
+	/**
+	 * Establece el nombre completo del cliente.
+	 *
+	 * @param nombreCompleto el nombre completo del cliente a asignar.
+	 */
 	public void setNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
 	}
@@ -135,16 +140,31 @@ public class Cliente {
 		return email;
 	}
 
+	/**
+	 * Establece el correo electrónico del cliente.
+	 *
+	 * @param email el correo electrónico del cliente a asignar.
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/**
+	 * Obtiene la fecha en la que se crea el cliente.
+	 *
+	 * @return la fecha de la creación del cliente.
+	 */
 	public LocalDate getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-	public void setFechaCreacion(LocalDate fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	/**
+	 * Establece la fecha de creación del cliente.
+	 * 
+	 * No tiene parámetro ya que se le pondrá la fecha actual.
+	 */
+	public void setFechaCreacion() {
+		this.fechaCreacion = LocalDate.now();
 	}
 
 	@Override

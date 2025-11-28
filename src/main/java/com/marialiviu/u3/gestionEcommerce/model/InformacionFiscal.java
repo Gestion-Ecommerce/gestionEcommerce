@@ -133,11 +133,34 @@ public class InformacionFiscal {
 		this.direccion = direccion;
 	}
 
+	/**
+	 * Calcula el código hash consistente con {@link #equals(Object)}.
+	 * <p>
+	 * Si {@code nif_cif} no es {@code null}, el hash se basa en dicho valor.
+	 * En caso contrario se delega en {@link System#identityHashCode(Object)}
+	 * para evitar que dos instancias sin identificador aparente colisionen
+	 * como si tuvieran la misma identidad lógica.
+	 * </p>
+	 *
+	 * @return el código hash de la instancia
+	 */
 	@Override
 	public int hashCode() {
 		return nif_cif != null ? Objects.hash(nif_cif) : System.identityHashCode(this);
 	}
 
+	/**
+	 * Comprueba la igualdad lógica entre esta instancia y otro objeto.
+	 * <p>
+	 * Dos instancias de {@code InformacionFiscal} se consideran iguales si
+	 * ambos son del mismo tipo y tienen el mismo {@code nif_cif}. La comparación
+	 * maneja correctamente valores {@code null} mediante {@link java.util.Objects#equals(Object, Object)}.
+	 * </p>
+	 *
+	 * @param obj el objeto a comparar
+	 * @return {@code true} si los objetos son iguales según la definición anterior,
+	 *         {@code false} en caso contrario
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -149,6 +172,14 @@ public class InformacionFiscal {
 		return Objects.equals(nif_cif, other.nif_cif);
 	}
 
+	/**
+	 * Representación en cadena de la instancia, útil para depuración.
+	 * <p>
+	 * Incluye el {@code nif_cif}, el {@code telefono} y la {@code direccion}.
+	 * </p>
+	 *
+	 * @return representación textual no nula de la entidad
+	 */
 	@Override
 	public String toString() {
 		return "InformacionFiscal [nif_cif=" + nif_cif + ", telefono=" + telefono + ", direccion=" + direccion + "]";
