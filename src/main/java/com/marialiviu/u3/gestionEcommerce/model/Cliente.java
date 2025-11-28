@@ -31,7 +31,11 @@ import jakarta.persistence.Table;
  * mientras que si el identificador es nulo se recurre al comportamiento por
  * defecto de {@code Object} para evitar colisiones prematuras.
  *
- * <p><b>Ejemplo de uso:</b></p>
+ * TODO
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
  * <pre>{@code
  * Cliente c = new Cliente();
  * c.setNif_cif("12345678A");
@@ -83,9 +87,12 @@ public class Cliente {
 	private List<Compra> compras;
 	
 	// TODO añadir relación con tabla Informacion Fiscal
-	
-	public Cliente() {
-		
+
+	public Cliente(String nif_cif, String nombreCompleto, String email, LocalDate fechaCreacion) {
+		this.nif_cif = nif_cif;
+		this.nombreCompleto = nombreCompleto;
+		this.email = email;
+		this.fechaCreacion = fechaCreacion;
 	}
 	
 	/**

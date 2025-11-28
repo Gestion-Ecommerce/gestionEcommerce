@@ -28,7 +28,11 @@ import jakarta.persistence.Table;
  * mientras que si el identificador es nulo se recurre al comportamiento por
  * defecto de {@code Object} para evitar colisiones prematuras.
  *
- * <p><b>Ejemplo de uso:</b></p>
+ * TODO
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
  * <pre>{@code
  * Cliente c = new Cliente();
  * c.setNif_cif("12345678A");
@@ -66,13 +70,13 @@ public class InformacionFiscal {
 	 */
 	@Column(name = "direccion")
 	private String direccion;
-	
+
 	// TODO añadir la relacion con tabla Cliente
-	
-	/**
-	 * Constructor sin argumentos requerido por JPA.
-	 */
-	public InformacionFiscal() {
+
+	public InformacionFiscal(String nif_cif, String telefono, String direccion) {
+		this.nif_cif = nif_cif;
+		this.telefono = telefono;
+		this.direccion = direccion;
 	}
 
 	/**
