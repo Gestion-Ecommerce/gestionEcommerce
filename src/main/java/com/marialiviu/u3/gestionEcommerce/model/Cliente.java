@@ -87,11 +87,18 @@ public class Cliente {
 	private List<Compra> compras;
 	
 	// TODO añadir relación con tabla Informacion Fiscal
+	
+	public Cliente() {
+		this.nif_cif = "";
+		this.nombreCompleto = "";
+		this.email = "";
+		this.fechaCreacion = LocalDate.now();
+	}
 
 	public Cliente(String nif_cif, String nombreCompleto, String email) {
-		this.nif_cif = nif_cif;
-		this.nombreCompleto = nombreCompleto;
-		this.email = email;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
+		this.nombreCompleto = (nombreCompleto != null) ? nombreCompleto.trim() : "";
+		this.email = (email != null) ? email.trim() : "";
 		this.fechaCreacion = LocalDate.now();
 	}
 	
@@ -110,7 +117,7 @@ public class Cliente {
 	 * @param nif_cif el NIF/CIF a asignar.
 	 */
 	public void setNif_cif(String nif_cif) {
-		this.nif_cif = nif_cif;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 	}
 
 	/**
@@ -128,7 +135,7 @@ public class Cliente {
 	 * @param nombreCompleto el nombre completo del cliente a asignar.
 	 */
 	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = nombreCompleto;
+		this.nombreCompleto = (nombreCompleto != null) ? nombreCompleto.trim() : "";
 	}
 
 	/**
@@ -146,7 +153,7 @@ public class Cliente {
 	 * @param email el correo electrónico del cliente a asignar.
 	 */
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = (email != null) ? email.trim() : "";
 	}
 
 	/**

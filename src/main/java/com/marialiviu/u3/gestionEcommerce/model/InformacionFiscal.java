@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
  *
  * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
  * {@code hashCode} basándose en el {@code nif_cif} cuando éste está presente.
- * Esto permite que la identidad lógica del cliente dependa de su NIF/CIF,
+ * Esto permite que la identidad lógica de la información fiscal dependa de su NIF/CIF,
  * mientras que si el identificador es nulo se recurre al comportamiento por
  * defecto de {@code Object} para evitar colisiones prematuras.
  *
@@ -34,10 +34,10 @@ import jakarta.persistence.Table;
  * </p>
  * 
  * <pre>{@code
- * Cliente c = new Cliente();
- * c.setNif_cif("12345678A");
- * c.setTelefono("926874632");
- * c.setDireccion("Calle Prueba, 25, 13000, Ciudad Real");
+ * InformacionFiscal info = new InformacionFiscal();
+ * info.setNif_cif("12345678A");
+ * info.setTelefono("926874632");
+ * info.setDireccion("Calle Prueba, 25, 13000, Ciudad Real");
  * System.out.println(c.getTelefono()); // imprime: 926874632
  * }</pre>
  *
@@ -73,10 +73,16 @@ public class InformacionFiscal {
 
 	// TODO añadir la relacion con tabla Cliente
 
+	public InformacionFiscal() {
+		this.nif_cif = "";
+		this.telefono = "";
+		this.direccion = "";
+	} 
+	
 	public InformacionFiscal(String nif_cif, String telefono, String direccion) {
-		this.nif_cif = nif_cif;
-		this.telefono = telefono;
-		this.direccion = direccion;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
+		this.telefono = (telefono != null) ? telefono.trim() : "";
+		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class InformacionFiscal {
 	 * @param nif_cif el NIF/CIF a asignar.
 	 */
 	public void setNif_cif(String nif_cif) {
-		this.nif_cif = nif_cif;
+		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 	}
 
 	/**
@@ -112,7 +118,7 @@ public class InformacionFiscal {
 	 * @param telefono el teléfono a asignar.
 	 */
 	public void setTelefono(String telefono) {
-		this.telefono = telefono;
+		this.telefono = (telefono != null) ? telefono.trim() : "";
 	}
 
 	/**
@@ -130,7 +136,7 @@ public class InformacionFiscal {
 	 * @param direccion la dirección a asignar.
 	 */
 	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
 	/**
