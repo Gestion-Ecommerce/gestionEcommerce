@@ -23,7 +23,11 @@ public class ArticuloCompra {
 	@Column(name = "precio_compra")
 	private float precioCompra;
 
-	public ArticuloCompra() {
+	public ArticuloCompra(int idCompra, int idArticulo, int unidades, float precioCompra) {
+		this.idCompra = idCompra;
+		this.idArticulo = idArticulo;
+		this.unidades = unidades;
+		this.precioCompra = precioCompra;
 
 	}
 

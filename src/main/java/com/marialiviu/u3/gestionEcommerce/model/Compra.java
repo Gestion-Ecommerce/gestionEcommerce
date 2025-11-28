@@ -39,8 +39,12 @@ public class Compra {
 
 	// TODO añadir relación con tabla ArticuloCompra
 
-	public Compra() {
-
+	public Compra(int id, String idCliente, LocalDate fechaCompra, EstadoCompra estado, float precioTotal) {
+		this.id = id;
+		this.idCliente = idCliente;
+		this.fechaCompra = fechaCompra;
+		this.estado = estado;
+		this.precioTotal = precioTotal;
 	}
 
 	public int getId() {

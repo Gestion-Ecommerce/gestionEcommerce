@@ -41,7 +41,10 @@ public class InformacionFiscal {
 
 	// TODO añadir la relacion con tabla Cliente
 
-	public InformacionFiscal() {
+	public InformacionFiscal(String nif_cif, String telefono, String direccion) {
+		this.nif_cif = nif_cif;
+		this.telefono = telefono;
+		this.direccion = direccion;
 	}
 
 	public String getNif_cif() {

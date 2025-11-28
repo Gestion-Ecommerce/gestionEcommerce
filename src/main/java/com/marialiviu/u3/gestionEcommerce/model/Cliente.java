@@ -45,8 +45,11 @@ public class Cliente {
 
 	// TODO añadir relación con tabla Informacion Fiscal
 
-	public Cliente() {
-
+	public Cliente(String nif_cif, String nombreCompleto, String email, LocalDate fechaCreacion) {
+		this.nif_cif = nif_cif;
+		this.nombreCompleto = nombreCompleto;
+		this.email = email;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public String getNif_cif() {

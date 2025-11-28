@@ -27,7 +27,12 @@ public class Articulo {
 
 	// TODO añadir relación con tabla ArticuloCompra
 
-	public Articulo() {
+	public Articulo(int Id, String nombre, String descripcion, float precioActual, int stock) {
+		this.id = Id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precioActual = precioActual;
+		this.stock = stock;
 
 	}
 
