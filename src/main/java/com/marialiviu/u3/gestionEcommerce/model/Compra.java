@@ -38,13 +38,21 @@ public class Compra {
 	private float precioTotal;
 
 	// TODO añadir relación con tabla ArticuloCompra
-
+	
+	public Compra() {
+		this.id = 0;
+		this.idCliente = "";
+		this.fechaCompra = LocalDate.now();
+		this.estado = EstadoCompra.PENDIENTE;
+		this.precioTotal = 0;
+	}
+	
 	public Compra(int id, String idCliente, LocalDate fechaCompra, EstadoCompra estado, float precioTotal) {
-		this.id = id;
-		this.idCliente = idCliente;
-		this.fechaCompra = fechaCompra;
-		this.estado = estado;
-		this.precioTotal = precioTotal;
+		this.id = (id > 0) ? id : 0;
+		this.idCliente = (idCliente != null) ? idCliente.trim() : "";
+		this.fechaCompra = (fechaCompra != null) ? fechaCompra : LocalDate.now();
+		this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
+		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
 	}
 
 	public int getId() {
@@ -52,7 +60,7 @@ public class Compra {
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.id = (id > 0) ? id : 0;
 	}
 
 	public String getIdCliente() {
@@ -60,7 +68,7 @@ public class Compra {
 	}
 
 	public void setIdCliente(String idCliente) {
-		this.idCliente = idCliente;
+		this.idCliente = (idCliente != null) ? idCliente.trim() : "";
 	}
 
 	public LocalDate getFechaCompra() {
@@ -68,7 +76,7 @@ public class Compra {
 	}
 
 	public void setFechaCompra(LocalDate fechaCompra) {
-		this.fechaCompra = fechaCompra;
+		this.fechaCompra = (fechaCompra != null) ? fechaCompra : LocalDate.now();
 	}
 
 	public EstadoCompra getEstado() {
@@ -76,7 +84,7 @@ public class Compra {
 	}
 
 	public void setEstado(EstadoCompra estado) {
-		this.estado = estado;
+		this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
 	}
 
 	public float getPrecioTotal() {
@@ -84,7 +92,7 @@ public class Compra {
 	}
 
 	public void setPrecioTotal(float precioTotal) {
-		this.precioTotal = precioTotal;
+		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
 	}
 
 	@Override

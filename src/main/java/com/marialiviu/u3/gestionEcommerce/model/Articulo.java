@@ -27,13 +27,20 @@ public class Articulo {
 
 	// TODO añadir relación con tabla ArticuloCompra
 
-	public Articulo(int Id, String nombre, String descripcion, float precioActual, int stock) {
-		this.id = Id;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.precioActual = precioActual;
-		this.stock = stock;
-
+	public Articulo() {
+		this.id = 0;
+		this.nombre = "";
+		this.descripcion = "";
+		this.precioActual = 0;
+		this.stock = 0;
+	}
+	
+	public Articulo(int id, String nombre, String descripcion, float precioActual, int stock) {
+		this.id = (id > 0) ? id : 0;
+		this.nombre = (nombre != null) ? nombre.trim() : "";
+		this.descripcion = (descripcion != null) ? descripcion.trim() : "";
+		this.precioActual = (precioActual >= 0) ? precioActual : 0;
+		this.stock = (stock >= 0) ? stock : 0;
 	}
 
 	public int getId() {
@@ -41,7 +48,7 @@ public class Articulo {
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.id = (id > 0) ? id : 0;
 	}
 
 	public String getNombre() {
@@ -49,7 +56,7 @@ public class Articulo {
 	}
 
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		this.nombre = (nombre != null) ? nombre.trim() : "";
 	}
 
 	public String getDescripcion() {
@@ -57,7 +64,7 @@ public class Articulo {
 	}
 
 	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+		this.descripcion = (descripcion != null) ? descripcion.trim() : "";
 	}
 
 	public float getPrecioActual() {
@@ -65,7 +72,7 @@ public class Articulo {
 	}
 
 	public void setPrecioActual(float precioActual) {
-		this.precioActual = precioActual;
+		this.precioActual = (precioActual >= 0) ? precioActual : 0;
 	}
 
 	public int getStock() {
@@ -73,7 +80,7 @@ public class Articulo {
 	}
 
 	public void setStock(int stock) {
-		this.stock = stock;
+		this.stock = (stock >= 0) ? stock : 0;
 	}
 
 	@Override
