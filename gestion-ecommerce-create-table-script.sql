@@ -31,12 +31,13 @@ ENGINE=InnoDB;
 -- Relacion N:M Clientes <-> Compras
 CREATE TABLE IF NOT EXISTS compras (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	id_cliente VARCHAR(9) NOT NULL UNIQUE,
+	id_cliente VARCHAR(9) NOT NULL DEFAULT "",
+	direccion VARCHAR(150),
 	fecha_compra DATETIME NOT NULL,
 	estado ENUM('Pendiente', 'Enviado', 'Entregado') NOT NULL,
 	precio_total DECIMAL NOT NULL,
 	FOREIGN KEY (id_cliente) REFERENCES clientes(nif_cif)
-	ON DELETE CASCADE
+	ON DELETE SET DEFAULT
 )
 ENGINE=InnoDB;
 
@@ -53,13 +54,14 @@ ENGINE=InnoDB;
 -- Articulo_Compra
 -- Relacion N:M
 CREATE TABLE IF NOT EXISTS articulo_compra (
-	id_compra INT NOT NULL,
-	id_articulo INT NOT NULL,
+	id_compra INT PRIMARY KEY NOT NULL,
+	id_articulo INT PRIMARY KEY NOT NULL,
 	unidades INT NOT NULL,
 	precio_compra DECIMAL NOT NULL,
 	FOREIGN KEY (id_compra) REFERENCES compras(id)
-	ON DELETE CASCADE,
+	ON DELETE RESTRICT,
 	FOREIGN KEY (id_articulo) REFERENCES articulos(id)
-	ON DELETE CASCADE
+	ON UPDATE CASCADE
+	ON DELETE RESTRICT
 )
 ENGINE=InnoDB;

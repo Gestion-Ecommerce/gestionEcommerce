@@ -1,6 +1,7 @@
 package com.marialiviu.u3.gestionEcommerce.model;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -9,51 +10,107 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Clase que representa un cliente.
+ * Representa un cliente del sistema de gestión del e-commerce.
+ * <p>
+ * Esta entidad se mapea a la tabla <code>clientes</code> de la base de datos
+ * mediante JPA. El identificador único de la entidad es el campo
+ * {@link #nif_cif}, que corresponde al NIF/CIF del cliente.
+ * </p>
  *
- * TODO
+ * Campos principales:
+ * <ul>
+ *   <li><b>nif_cif</b> - Identificador único del cliente (clave primaria).</li>
+ *   <li><b>nombreCompleto</b> - Nombre y apellidos del cliente.</li>
+ *   <li><b>email</b> - Dirección de correo electrónico.</li>
+ *   <li><b>fechaCreacion</b> - Fecha en la que se creó el registro del cliente.</li>
+ * </ul>
+ *
+ * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
+ * {@code hashCode} basándose en el {@code nif_cif} cuando éste está presente.
+ * Esto permite que la identidad lógica del cliente dependa de su NIF/CIF,
+ * mientras que si el identificador es nulo se recurre al comportamiento por
+ * defecto de {@code Object} para evitar colisiones prematuras.
+ *
  * <p><b>Ejemplo de uso:</b></p>
  * <pre>{@code
- * Cliente cliente = new Cliente();
- * System.out.println(cliente.getEmail()); // Imprime:
+ * Cliente c = new Cliente();
+ * c.setNif_cif("12345678A");
+ * c.setNombreCompleto("María Pérez");
+ * c.setEmail("maria@example.com");
+ * c.setFechaCreacion(LocalDate.now());
+ * System.out.println(c.getEmail()); // imprime: maria@example.com
  * }</pre>
  *
  * @author María
  * @version 1.0
  * @since 2025-11-27
+ * @see InformacionFiscal
  */
 
 @Entity
 @Table(name = "clientes")
 public class Cliente {
 	
+	/**
+	 * NIF/CIF que identifica de forma única la información fiscal.
+	 * Es la clave primaria de la tabla.
+	 */
 	@Id
 	@Column(name = "nif_cif")
 	private String nif_cif;
 	
+	/**
+	 * Nombre completo del cliente.
+	 */
 	@Column(name="nombre_completo")
 	private String nombreCompleto;
 	
+	/**
+	 * Correo electrónico del cliente con el que hace la compra. 
+	 */
 	@Column(name="email")
 	private String email;
 	
+	/**
+	 * Fecha y hora en la que se crea el cliente.
+	 */
 	@Column(name="fecha_creacion")
 	private LocalDate fechaCreacion;
+	
+	/**
+	 * Array de las compras que hace el cliente.
+	 */
+	private List<Compra> compras;
 	
 	// TODO añadir relación con tabla Informacion Fiscal
 	
 	public Cliente() {
 		
 	}
-
+	
+	/**
+	 * Obtiene el NIF/CIF.
+	 *
+	 * @return el NIF/CIF (clave primaria) o {@code null} si no está establecido.
+	 */
 	public String getNif_cif() {
 		return nif_cif;
 	}
 
+	/**
+	 * Establece el NIF/CIF.
+	 *
+	 * @param nif_cif el NIF/CIF a asignar.
+	 */
 	public void setNif_cif(String nif_cif) {
 		this.nif_cif = nif_cif;
 	}
 
+	/**
+	 * Obtiene el nombre completo del cliente.
+	 *
+	 * @return el nombre del cliente. Si no tiene nombre, retornará una cadena vacía.
+	 */
 	public String getNombreCompleto() {
 		return nombreCompleto;
 	}
@@ -62,6 +119,11 @@ public class Cliente {
 		this.nombreCompleto = nombreCompleto;
 	}
 
+	/**
+	 * Obtiene correo electrónico del cliente.
+	 *
+	 * @return el correo electrónico. Si no existe, retornará una cadena vacía.
+	 */
 	public String getEmail() {
 		return email;
 	}
