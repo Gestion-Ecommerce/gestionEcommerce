@@ -14,6 +14,51 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 
+/**
+ * Representa una compra del sistema de gestión del e-commerce.
+ * <p>
+ * Esta entidad se mapea a la tabla <code>compra</code> de la base de datos
+ * mediante JPA. El identificador único de la entidad es el campo
+ * {@link #id}, que corresponde al ID de la compra.
+ * </p>
+ *
+ * Campos principales:
+ * <ul>
+ * <li><b>id</b> - Identificador único de la compra (clave primaria).</li>
+ * <li><b>id_cliente</b> - Identificador del cliente relacionado a la compra.</li>
+ * <li><b>fecha_compra</b> - Fecha y hora en la que se realizó la compra.</li>
+ * <li><b>estado</b> - El estado de la compra.</li>
+ * <li><b>dirrecion</b> - La dirreción de envío de la compra.</li>
+ * <li><b>precio_total</b> - El precio total de la compra.</li>
+ * </ul>
+ *
+ * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
+ * {@code hashCode} basándose en el {@code id} cuando éste está presente.
+ * Esto permite que la identidad lógica de la compra dependa de su ID,
+ * mientras que si el identificador es nulo se recurre al comportamiento por
+ * defecto de {@code Object} para evitar colisiones prematuras.
+ *
+ * TODO
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
+ * <pre>{@code
+ * Compra c = new Compra();
+ * c.setId("1");
+ * c.setIdCliente("12345678A");
+ * c.setFechaCompra(LocalDate.now());
+ * c.setEstado(Compra.EstadoCompra.PENDIENTE);
+ * c.setDireccion("Calle Falsa 123");
+ * c.setPrecioTotal(99.99f);
+ * }</pre>
+ *
+ * @author Liviu
+ * @version 1.0
+ * @since 2025-11-27
+ * @see InformacionFiscal
+ */
+
 @Entity
 @Table(name = "compras")
 public class Compra {
