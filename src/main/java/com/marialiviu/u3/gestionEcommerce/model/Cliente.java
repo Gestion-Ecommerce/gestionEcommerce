@@ -1,6 +1,7 @@
 package com.marialiviu.u3.gestionEcommerce.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -97,7 +98,7 @@ public class Cliente {
 	 * Array de las compras que hace el cliente.
 	 */
 	// TODO añadir relacion con tabla Compra
-	
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Compra> compras;
 	
 	/**
@@ -108,6 +109,7 @@ public class Cliente {
 		this.nombreCompleto = "";
 		this.email = "";
 		this.fechaCreacion = LocalDate.now();
+		this.compras = new ArrayList<>();
 	}
 
 	/**
@@ -121,6 +123,7 @@ public class Cliente {
 		this.nombreCompleto = (nombreCompleto != null) ? nombreCompleto.trim() : "";
 		this.email = (email != null) ? email.trim() : "";
 		this.fechaCreacion = LocalDate.now();
+		this.compras = new ArrayList<>();
 	}
 
 	/**
@@ -196,6 +199,11 @@ public class Cliente {
 		this.fechaCreacion = LocalDate.now();
 	}
 
+	/**
+	 * Establece la información fiscal del cliente. 
+	 *
+	 * @param el objeto información fiscal. 
+	 */
 	public void setInformacionFiscal(InformacionFiscal info) {
 		this.informacionFiscal = info;
 		if (info != null && info.getCliente() != this) {
@@ -203,9 +211,33 @@ public class Cliente {
 		}
 	}
 
+	/**
+	 * Obtiene la información fiscal del cliente.
+	 *
+	 * @return la información fiscal del cliente.
+	 */
 	public InformacionFiscal getInformacionFiscal() {
 		return informacionFiscal;
 	}
+	
+	/**
+	 * Obtiene las compras realizadas por el cliente. 
+	 *
+	 * @return una lista con todas las compras realizadas por el cliente.
+	 */
+	public List<Compra> getCompras() {
+	    return compras;
+	}
+
+	/**
+	 * Establece las compras realizadas por el cliente.
+	 *
+	 * @param una lista de compras.
+	 */
+	public void setCompras(List<Compra> compras) {
+	    this.compras = compras;
+	}
+
 
 	/**
 	 * Representación en cadena de la instancia, útil para depuración.
@@ -260,5 +292,33 @@ public class Cliente {
 		if (nif_cif == null && cliente.nif_cif == null)
 			return super.equals(obj);
 		return nif_cif == cliente.nif_cif;
+	}
+	
+	/**
+	 * Añade una compra a la lista de compras del cliente.
+	 *
+	 * @param un objeto compra.
+	 */
+	public void addCompra(Compra compra) {
+	    if (compra == null) return;
+	    if (!this.compras.contains(compra)) {
+	        this.compras.add(compra);
+	    }
+	    if (compra.getCliente() != this) {
+	        compra.setCliente(this);
+	    }
+	}
+
+	/**
+	 * Elimina una compra de la lista de compras del cliente.  
+	 *
+	 * @param un objeto compra.
+	 */
+	public void removeCompra(Compra compra) {
+	    if (compra == null) return;
+	    this.compras.remove(compra);
+	    if (compra.getCliente() == this) {
+	        compra.setCliente(null);
+	    }
 	}
 }
