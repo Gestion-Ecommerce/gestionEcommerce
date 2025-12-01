@@ -9,6 +9,50 @@ import jakarta.persistence.JoinColumn;
 
 import java.util.Objects;
 
+/**
+ * Representa la relación entre un artículo y una compra en el sistema de
+ * gestión del e-commerce.
+ * <p>
+ * Esta entidad se mapea a la tabla <code>articulo_compra</code> de la base de datos
+ * mediante JPA. El identificador único de la entidad es la combinación
+ * {@link #compraId} y {@link #articuloId}, que corresponden a los IDs
+ * de la compra y del artículo respectivamente.
+ * </p>
+ *
+ * Campos principales:
+ * <ul>
+ * <li><b>compraId</b> - Identificador de la compra (clave primaria).</li>
+ * <li><b>articuloId</b> - Identificador del artículo (clave primaria).</li>
+ * <li><b>unidades</b> - Cantidad de unidades del artículo en la compra.</li>
+ * <li><b>precio_compra</b> - Precio del artículo en el momento de la compra.</li>
+ * </ul>
+ *
+ * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
+ * {@code hashCode} basándose en la combinación de {@code compraId} y
+ * {@code articuloId}. Esto permite que la identidad lógica de la relación
+ * dependa de ambos identificadores.
+ *
+ * TODO
+ * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * 
+ * <pre>{@code
+ * Articulo a = new Articulo();
+ * c.setId("1");
+ * c.setNombre("Pan");
+ * c.setDescripcion("Pan integral");
+ * c.setPrecioActual(1.99f);
+ * c.setStock(100);
+ * }</pre>
+ *
+ * @author Liviu
+ * @version 1.0
+ * @since 2025-11-27
+ * @see Articulo
+ * @see Compra
+ */
+
 @Entity
 @Table(name = "articulo_compra")
 public class ArticuloCompra {
