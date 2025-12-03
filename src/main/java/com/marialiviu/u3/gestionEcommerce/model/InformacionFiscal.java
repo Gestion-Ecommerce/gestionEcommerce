@@ -32,7 +32,6 @@ import jakarta.persistence.Table;
  * comportamiento por defecto de {@code Object} para evitar colisiones
  * prematuras.
  *
- * TODO
  * <p>
  * <b>Ejemplo de uso:</b>
  * </p>
@@ -156,11 +155,24 @@ public class InformacionFiscal {
 		this.direccion = (direccion != null) ? direccion.trim() : "";
 	}
 
+	/**
+	 * Establece el cliente, asociando el nif_cif del ciente al de la información fiscal.
+	 * Establenciendo así el cliente a su información fiscal.
+	 *
+	 * @param objeto cliente.
+	 */
 	public void setCliente(Cliente c) {
 		this.cliente = c;
-		this.nif_cif = (c != null) ? c.getNif_cif() : null;
+		if (c != null) {
+	        this.nif_cif = c.getNif_cif();
+	    }
 	}
 
+	/**
+	 * Obtiene el cliente asociado a la información fiscal.
+	 *
+	 * @return el objeto cliente asociado a la información fiscal.
+	 */
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -202,7 +214,7 @@ public class InformacionFiscal {
 			return false;
 		InformacionFiscal other = (InformacionFiscal) obj;
 		// Usar Objects.equals para comparar cadenas (maneja nulls correctamente)
-		return Objects.equals(nif_cif, other.nif_cif);
+		return nif_cif != null && Objects.equals(nif_cif, other.getNif_cif());
 	}
 
 	/**

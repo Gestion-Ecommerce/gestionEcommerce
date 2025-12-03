@@ -116,6 +116,9 @@ public class Compra {
 	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
 	
+	//TODO relacion cliente
+	private Cliente cliente;
+	
 	/**
 	 * Constructor que crea un objeto Compra con valores por defecto.
 	 */
@@ -240,6 +243,22 @@ public class Compra {
 	 */
 	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
 		this.articuloCompras = articuloCompras;
+	}
+	
+	/**
+	 * Obtiene el cliente asociado a la compra.
+	 * @return objeto cliente.
+	 */
+	public Cliente getCliente() {
+	    return cliente;
+	}
+
+	/**
+	 * Establece el cliente asociado a la compra.
+	 * @param objeto cliente.
+	 */
+	public void setCliente(Cliente cliente) {
+	    this.cliente = cliente;
 	}
 
 	/**

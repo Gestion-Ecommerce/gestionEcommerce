@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 /**
@@ -37,7 +38,6 @@ import jakarta.persistence.Table;
  * mientras que si el identificador es nulo se recurre al comportamiento por
  * defecto de {@code Object} para evitar colisiones prematuras.
  *
- * TODO
  * <p>
  * <b>Ejemplo de uso:</b>
  * </p>
@@ -47,7 +47,6 @@ import jakarta.persistence.Table;
  * c.setNif_cif("12345678A");
  * c.setNombreCompleto("María Pérez");
  * c.setEmail("maria@example.com");
- * c.setFechaCreacion(LocalDate.now());
  * System.out.println(c.getEmail()); // imprime: maria@example.com
  * }</pre>
  *
@@ -88,15 +87,11 @@ public class Cliente {
 	private LocalDate fechaCreacion;
 
 	
-	
-
 	// TODO añadir relación con tabla Informacion Fiscal
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private InformacionFiscal informacionFiscal;
 
-	/**
-	 * Array de las compras que hace el cliente.
-	 */
+
 	// TODO añadir relacion con tabla Compra
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Compra> compras;
@@ -108,7 +103,7 @@ public class Cliente {
 		this.nif_cif = "";
 		this.nombreCompleto = "";
 		this.email = "";
-		this.fechaCreacion = LocalDate.now();
+		//this.fechaCreacion = LocalDate.now();
 		this.compras = new ArrayList<>();
 	}
 
@@ -122,7 +117,7 @@ public class Cliente {
 		this.nif_cif = (nif_cif != null) ? nif_cif.trim() : "";
 		this.nombreCompleto = (nombreCompleto != null) ? nombreCompleto.trim() : "";
 		this.email = (email != null) ? email.trim() : "";
-		this.fechaCreacion = LocalDate.now();
+		//this.fechaCreacion = LocalDate.now();
 		this.compras = new ArrayList<>();
 	}
 
@@ -195,8 +190,15 @@ public class Cliente {
 	 * 
 	 * No tiene parámetro ya que se le pondrá la fecha actual.
 	 */
-	public void setFechaCreacion() {
-		this.fechaCreacion = LocalDate.now();
+	public void setFechaCreacion(LocalDate fecha) {
+		this.fechaCreacion = fecha;
+	}
+	
+	@PrePersist
+	public void prePersist() {
+	    if (this.fechaCreacion == null) {
+	        this.fechaCreacion = LocalDate.now();
+	    }
 	}
 
 	/**
@@ -288,10 +290,10 @@ public class Cliente {
 			return true;
 		if (obj == null || getClass() != obj.getClass() && !(obj instanceof Cliente))
 			return false;
-		Cliente cliente = (Cliente) obj;
-		if (nif_cif == null && cliente.nif_cif == null)
+		Cliente other = (Cliente) obj;
+		if (nif_cif == null && other.nif_cif == null)
 			return super.equals(obj);
-		return nif_cif == cliente.nif_cif;
+		return nif_cif != null && Objects.equals(nif_cif, other.getNif_cif());
 	}
 	
 	/**
@@ -310,7 +312,7 @@ public class Cliente {
 	}
 
 	/**
-	 * Elimina una compra de la lista de compras del cliente.  
+	 * Elimina una compra de la lista de compras del cliente. 
 	 *
 	 * @param un objeto compra.
 	 */
@@ -321,4 +323,5 @@ public class Cliente {
 	        compra.setCliente(null);
 	    }
 	}
+	
 }
