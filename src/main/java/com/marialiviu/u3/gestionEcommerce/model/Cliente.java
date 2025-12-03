@@ -60,6 +60,11 @@ import jakarta.persistence.Table;
 @Table(name = "clientes")
 public class Cliente {
 
+    /** 
+     * Valor por defecto que se asignará a compras cuando se borre un cliente.
+     */
+    public static final String DEFAULT_CLIENT_NIF = "DESCONOCIDO";
+
 	/**
 	 * NIF/CIF que identifica de forma única la información fiscal. Es la clave
 	 * primaria de la tabla.
@@ -86,14 +91,15 @@ public class Cliente {
 	@Column(name = "fecha_creacion")
 	private LocalDate fechaCreacion;
 
-	
-	// TODO añadir relación con tabla Informacion Fiscal
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private InformacionFiscal informacionFiscal;
 
-
-	// TODO añadir relacion con tabla Compra
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	/**
+	 * Compras asociadas al cliente.
+	 * No se propaga REMOVE para evitar borrar las compras cuando se elimina el cliente;
+	 * sólo se propagan operaciones de persist/merge/refresh para mantener el estado.
+	 */
+	@OneToMany(mappedBy = "cliente", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	private List<Compra> compras;
 	
 	/**
@@ -200,7 +206,7 @@ public class Cliente {
 	        this.fechaCreacion = LocalDate.now();
 	    }
 	}
-
+	
 	/**
 	 * Establece la información fiscal del cliente. 
 	 *
@@ -237,10 +243,9 @@ public class Cliente {
 	 * @param una lista de compras.
 	 */
 	public void setCompras(List<Compra> compras) {
-	    this.compras = compras;
-	}
-
-
+         this.compras = compras;
+     }
+	
 	/**
 	 * Representación en cadena de la instancia, útil para depuración.
 	 * <p>

@@ -7,12 +7,14 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 
 /**
  * Representa una compra del sistema de gestión del e-commerce.
@@ -75,7 +77,7 @@ public class Compra {
 	/**
 	 * ID que identifica el cliente relacionado a la compra.
 	 */
-	@Column(name = "id_cliente")
+	@Column(name = "id_cliente", insertable = false, updatable = false)
 	private String idCliente;
 
 	/**
@@ -116,7 +118,11 @@ public class Compra {
 	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
 	
-	//TODO relacion cliente
+	/**
+	 * El cliente asociado a la compra.
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_cliente", referencedColumnName = "nif_cif", nullable = true)
 	private Cliente cliente;
 	
 	/**
@@ -214,16 +220,16 @@ public class Compra {
 	}
 
 	/**
-	 * Obtiene la dirección de envío de la compra.
-	 * @return
+	 * Obtiene el precio total de la compra.
+	 * @return el precio total
 	 */
 	public float getPrecioTotal() {
 		return precioTotal;
 	}
 
 	/**
-	 * Establece la dirección de envío de la compra.
-	 * @param precioTotal
+	 * Establece el precio total de la compra.
+	 * @param precioTotal el precio total (no negativo)
 	 */
 	public void setPrecioTotal(float precioTotal) {
 		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
@@ -258,7 +264,21 @@ public class Compra {
 	 * @param objeto cliente.
 	 */
 	public void setCliente(Cliente cliente) {
+	    Cliente previous = this.cliente;
+	    // No hacer nada si el cliente no cambia
+	    if (previous == cliente) return;
+	
 	    this.cliente = cliente;
+	    // Mantener idCliente consistente en memoria (usar placeholder si es null)
+	    this.idCliente = (cliente != null && cliente.getNif_cif() != null) ? cliente.getNif_cif() : Cliente.DEFAULT_CLIENT_NIF;
+	
+	    // Mantener la relación bidireccional en memoria
+	    if (previous != null && previous.getCompras() != null) {
+	        previous.getCompras().remove(this);
+	    }
+	    if (cliente != null && cliente.getCompras() != null && !cliente.getCompras().contains(this)) {
+	        cliente.getCompras().add(this);
+	    }
 	}
 
 	/**
