@@ -75,10 +75,8 @@ public class InformacionFiscal {
 	private String direccion;
 
 	// TODO añadir la relacion con tabla Cliente
-	@OneToOne
-	@MapsId // hace que esta entidad use la misma PK que cliente
-	@JoinColumn(name = "nif_cif")
-	private Cliente cliente;
+	@OneToOne(mappedBy = "informacionFiscal") // Referencia al atributo en la clase Cliente
+    private Cliente cliente;
 
 	/**
 	 * Constructor que crea un objeto Información Fiscal con valores por defecto.

@@ -2,6 +2,7 @@ package com.marialiviu.u3.gestionEcommerce.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,6 +11,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -89,10 +92,12 @@ public class Cliente {
 	 * Fecha y hora en la que se crea el cliente.
 	 */
 	@Column(name = "fecha_creacion")
-	private LocalDate fechaCreacion;
+	private Date fechaCreacion;
 
-	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private InformacionFiscal informacionFiscal;
+	@OneToOne(cascade = CascadeType.ALL) // La cascada va aquí para guardar cliente e info a la vez
+    @JoinColumn(name = "nif_cif")        // Esta es la columna física en la tabla 'clientes'
+    @MapsId                              // Opcional: Úsalo si Cliente usa el NIF también como su propia PK
+    private InformacionFiscal informacionFiscal;
 
 	/**
 	 * Compras asociadas al cliente.
@@ -187,7 +192,7 @@ public class Cliente {
 	 *
 	 * @return la fecha de la creación del cliente.
 	 */
-	public LocalDate getFechaCreacion() {
+	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
@@ -196,14 +201,14 @@ public class Cliente {
 	 * 
 	 * No tiene parámetro ya que se le pondrá la fecha actual.
 	 */
-	public void setFechaCreacion(LocalDate fecha) {
+	public void setFechaCreacion(Date fecha) {
 		this.fechaCreacion = fecha;
 	}
 	
 	@PrePersist
 	public void prePersist() {
 	    if (this.fechaCreacion == null) {
-	        this.fechaCreacion = LocalDate.now();
+	        this.fechaCreacion = Date.from(java.time.Instant.now());
 	    }
 	}
 	

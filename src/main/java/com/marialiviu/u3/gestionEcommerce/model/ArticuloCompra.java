@@ -92,7 +92,7 @@ public class ArticuloCompra {
     /**
      * Precio del artículo en el momento de la compra.
      */
-    @Column(name = "precio_compra")
+    @Column(name = "precio_compra", columnDefinition = "DECIMAL(10,2)")
     private float precioCompra;
 
     /**

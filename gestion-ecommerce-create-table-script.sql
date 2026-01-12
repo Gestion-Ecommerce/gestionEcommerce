@@ -54,8 +54,9 @@ ENGINE=InnoDB;
 -- Articulo_Compra
 -- Relacion N:M
 CREATE TABLE IF NOT EXISTS articulo_compra (
-	id_compra INT PRIMARY KEY NOT NULL,
-	id_articulo INT PRIMARY KEY NOT NULL,
+	id_compra INT NOT NULL,
+	id_articulo INT NOT NULL,
+	PRIMARY KEY (id_compra, id_articulo),
 	unidades INT NOT NULL,
 	precio_compra DECIMAL NOT NULL,
 	FOREIGN KEY (id_compra) REFERENCES compras(id)

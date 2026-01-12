@@ -1,340 +1,186 @@
 package com.marialiviu.u3.gestionEcommerce.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-
-/**
- * Representa una compra del sistema de gestión del e-commerce.
- * <p>
- * Esta entidad se mapea a la tabla <code>compra</code> de la base de datos
- * mediante JPA. El identificador único de la entidad es el campo
- * {@link #id}, que corresponde al ID de la compra.
- * </p>
- *
- * Campos principales:
- * <ul>
- * <li><b>id</b> - Identificador único de la compra (clave primaria).</li>
- * <li><b>id_cliente</b> - Identificador del cliente relacionado a la compra.</li>
- * <li><b>fecha_compra</b> - Fecha y hora en la que se realizó la compra.</li>
- * <li><b>estado</b> - El estado de la compra.</li>
- * <li><b>dirrecion</b> - La dirreción de envío de la compra.</li>
- * <li><b>precio_total</b> - El precio total de la compra.</li>
- * </ul>
- *
- * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
- * {@code hashCode} basándose en el {@code id} cuando éste está presente.
- * Esto permite que la identidad lógica de la compra dependa de su ID,
- * mientras que si el identificador es nulo se recurre al comportamiento por
- * defecto de {@code Object} para evitar colisiones prematuras.
- *
- * TODO
- * <p>
- * <b>Ejemplo de uso:</b>
- * </p>
- * 
- * <pre>{@code
- * Compra c = new Compra();
- * c.setId("1");
- * c.setIdCliente("12345678A");
- * c.setFechaCompra(LocalDate.now());
- * c.setEstado(Compra.EstadoCompra.PENDIENTE);
- * c.setDireccion("Calle Falsa 123");
- * c.setPrecioTotal(99.99f);
- * }</pre>
- *
- * @author Liviu
- * @version 1.0
- * @since 2025-11-27
- * @see ArticuloCompra
- */
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "compras")
 public class Compra {
 
-	/**
-	 * ID que identifica de forma única la compra. Es la clave
-	 * primaria de la tabla.
-	 */
-	@Id
-	@Column(name = "id")
-	private int id;
+    @Id
+    @Column(name = "id")
+    private int id;
 
+    @Column(name = "fecha_compra")
+    private Date fechaCompra;
 
-	/**
-	 * ID que identifica el cliente relacionado a la compra.
-	 */
-	@Column(name = "id_cliente", insertable = false, updatable = false)
-	private String idCliente;
+    public enum EstadoCompra {
+        PENDIENTE, ENVIADO, ENTREGADO
+    }
 
-	/**
-	 * Fecha de la compra realizada.
-	 */
-	@Column(name = "fecha_compra")
-	private LocalDate fechaCompra;
+    @Column(name = "estado")
+    @Enumerated(EnumType.STRING)
+    private EstadoCompra estado;
 
-	/**
-	 * Enumerado de los estados de la compra.
-	 */
-	public enum EstadoCompra {
-		PENDIENTE, ENVIADO, ENTREGADO
-	}
+    @Column(name = "direccion")
+    private String direccion;
 
-	/**
-	 * El estado en que se encuentra la compra.
-	 */
-	@Column(name = "estado")
-	@Enumerated(EnumType.STRING)
-	private EstadoCompra estado;
+    @Column(name = "precio_total", columnDefinition = "DECIMAL(10,2)")
+    private float precioTotal;
 
-	/**
-	 * La dirección donde se envia la compra.
-	 */
-	@Column(name = "direccion")
-	private String direccion;
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ArticuloCompra> articuloCompras = new HashSet<>();
+    
+    // --- ESTA ES LA PARTE IMPORTANTE MODIFICADA ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "nif_cif", nullable = false)
+    private Cliente cliente;
+    // ----------------------------------------------
+    
+    public Compra() {
+        this.id = 0;
+        this.fechaCompra = Date.from(Instant.now());
+        this.estado = EstadoCompra.PENDIENTE;
+        this.precioTotal = 0;
+        this.articuloCompras = new HashSet<>();
+    }
 
-	/**
-	 * El precio total de la compra realizada.
-	 */
-	@Column(name = "precio_total")
-	private float precioTotal;
+    /**
+     * Constructor MODIFICADO:
+     * Ahora recibe el OBJETO 'Cliente' en lugar del String 'idCliente'.
+     * Esto es obligatorio para que Hibernate pueda guardar la relación.
+     */
+    public Compra(int id, Cliente cliente, Date fechaCompra, EstadoCompra estado, float precioTotal) {
+        this.id = (id > 0) ? id : 0;
+        this.cliente = cliente; // Asignamos el objeto real
+        this.fechaCompra = (fechaCompra != null) ? fechaCompra : Date.from(Instant.now());
+        this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
+        this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
+        this.articuloCompras = new HashSet<>();
+    }
 
-	/**
-	 * Conjunto de artículos asociados a la compra.
-	 */
-	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<ArticuloCompra> articuloCompras = new HashSet<>();
-	
-	/**
-	 * El cliente asociado a la compra.
-	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_cliente", referencedColumnName = "nif_cif", nullable = true)
-	private Cliente cliente;
-	
-	/**
-	 * Constructor que crea un objeto Compra con valores por defecto.
-	 */
-	public Compra() {
-		this.id = 0;
-		this.idCliente = "";
-		this.fechaCompra = LocalDate.now();
-		this.estado = EstadoCompra.PENDIENTE;
-		this.precioTotal = 0;
-		this.articuloCompras = new HashSet<>();
-	}
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Contructor que crea un objeto Compra por parámetros. Si no se le pasan
-	 * parámetros, se pondrá un valor por defecto.
-	 * @param id
-	 * @param idCliente
-	 * @param fechaCompra
-	 * @param estado
-	 * @param precioTotal
-	 */
-	public Compra(int id, String idCliente, LocalDate fechaCompra, EstadoCompra estado, float precioTotal) {
-		this.id = (id > 0) ? id : 0;
-		this.idCliente = (idCliente != null) ? idCliente.trim() : "";
-		this.fechaCompra = (fechaCompra != null) ? fechaCompra : LocalDate.now();
-		this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
-		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
-		this.articuloCompras = new HashSet<>();
-	}
+    public void setId(int id) {
+        this.id = (id > 0) ? id : 0;
+    }
 
-	/**
-	 * Obtiene el ID de la compra.
-	 * @return
-	 */
-	public int getId() {
-		return id;
-	}
+    /**
+     * Obtiene el ID del cliente sacándolo del objeto Cliente.
+     * Mantenemos este método por si lo usabas en otra parte del código.
+     */
+    public String getIdCliente() {
+        return (cliente != null) ? cliente.getNif_cif() : null;
+    }
 
-	/**
-	 * Establece el ID de la compra.
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = (id > 0) ? id : 0;
-	}
+    // He eliminado setIdCliente(String) porque no se debe setear el ID manualmente, 
+    // hay que setear el objeto Cliente completo con setCliente().
 
-	/**
-	 * Obtiene el ID del cliente asociado a la compra.
-	 * @return
-	 */
-	public String getIdCliente() {
-		return idCliente;
-	}
+    public Date getFechaCompra() {
+        return fechaCompra;
+    }
 
-	/**
-	 * Establece el ID del cliente asociado a la compra.
-	 * @param idCliente
-	 */
-	public void setIdCliente(String idCliente) {
-		this.idCliente = (idCliente != null) ? idCliente.trim() : "";
-	}
+    public void setFechaCompra(Date fechaCompra) {
+        this.fechaCompra = (fechaCompra != null) ? fechaCompra : Date.from(Instant.now());
+    }
 
-	/**
-	 * Obtiene la fecha de la compra.
-	 * @return
-	 */
-	public LocalDate getFechaCompra() {
-		return fechaCompra;
-	}
+    public EstadoCompra getEstado() {
+        return estado;
+    }
 
-	/**
-	 * Establece la fecha de la compra.
-	 * @param fechaCompra
-	 */
-	public void setFechaCompra(LocalDate fechaCompra) {
-		this.fechaCompra = (fechaCompra != null) ? fechaCompra : LocalDate.now();
-	}
+    public void setEstado(EstadoCompra estado) {
+        this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
+    }
 
-	/**
-	 * Obtiene el estado de la compra.
-	 * @return
-	 */
-	public EstadoCompra getEstado() {
-		return estado;
-	}
+    public String getDireccion() {
+        return direccion;
+    }
 
-	/**
-	 * Establece el estado de la compra.
-	 * @param estado
-	 */
-	public void setEstado(EstadoCompra estado) {
-		this.estado = (estado != null) ? estado : EstadoCompra.PENDIENTE;
-	}
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
-	/**
-	 * Obtiene el precio total de la compra.
-	 * @return el precio total
-	 */
-	public float getPrecioTotal() {
-		return precioTotal;
-	}
+    public float getPrecioTotal() {
+        return precioTotal;
+    }
 
-	/**
-	 * Establece el precio total de la compra.
-	 * @param precioTotal el precio total (no negativo)
-	 */
-	public void setPrecioTotal(float precioTotal) {
-		this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
-	}
+    public void setPrecioTotal(float precioTotal) {
+        this.precioTotal = (precioTotal >= 0) ? precioTotal : 0;
+    }
 
-	/**
-	 * Obtiene el conjunto de artículos asociados a la compra.
-	 * @return
-	 */
-	public Set<ArticuloCompra> getArticuloCompras() {
-		return articuloCompras;
-	}
+    public Set<ArticuloCompra> getArticuloCompras() {
+        return articuloCompras;
+    }
 
-	/**
-	 * Establece el conjunto de artículos asociados a la compra.
-	 * @param articuloCompras
-	 */
-	public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
-		this.articuloCompras = articuloCompras;
-	}
-	
-	/**
-	 * Obtiene el cliente asociado a la compra.
-	 * @return objeto cliente.
-	 */
-	public Cliente getCliente() {
-	    return cliente;
-	}
+    public void setArticuloCompras(Set<ArticuloCompra> articuloCompras) {
+        this.articuloCompras = articuloCompras;
+    }
+    
+    // --- GETTER Y SETTER DEL OBJETO CLIENTE (NUEVOS/NECESARIOS) ---
+    public Cliente getCliente() {
+        return cliente;
+    }
 
-	/**
-	 * Establece el cliente asociado a la compra.
-	 * @param objeto cliente.
-	 */
-	public void setCliente(Cliente cliente) {
-	    Cliente previous = this.cliente;
-	    // No hacer nada si el cliente no cambia
-	    if (previous == cliente) return;
-	
-	    this.cliente = cliente;
-	    // Mantener idCliente consistente en memoria (usar placeholder si es null)
-	    this.idCliente = (cliente != null && cliente.getNif_cif() != null) ? cliente.getNif_cif() : Cliente.DEFAULT_CLIENT_NIF;
-	
-	    // Mantener la relación bidireccional en memoria
-	    if (previous != null && previous.getCompras() != null) {
-	        previous.getCompras().remove(this);
-	    }
-	    if (cliente != null && cliente.getCompras() != null && !cliente.getCompras().contains(this)) {
-	        cliente.getCompras().add(this);
-	    }
-	}
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+    // -------------------------------------------------------------
 
-	/**
-	 * Añade un artículo a la compra.
-	 * @param ac
-	 */
-	public void addArticuloCompra(ArticuloCompra ac) {
-		if (ac == null) return;
-		ac.setCompra(this);
-		this.articuloCompras.add(ac);
-	}
+    public void addArticuloCompra(ArticuloCompra ac) {
+        if (ac == null) return;
+        ac.setCompra(this);
+        this.articuloCompras.add(ac);
+    }
 
-	/**
-	 * Elimina un artículo de la compra.
-	 * @param ac
-	 */
-	public void removeArticuloCompra(ArticuloCompra ac) {
-		if (ac == null) return;
-		this.articuloCompras.remove(ac);
-		ac.setCompra(null);
-	}
+    public void removeArticuloCompra(ArticuloCompra ac) {
+        if (ac == null) return;
+        this.articuloCompras.remove(ac);
+        ac.setCompra(null);
+    }
 
-	/**
-	 * Devuelve una representación en cadena de la compra.
-	 */
-	@Override
-	public String toString() {
-		return "Compra [id=" + id + ", idCliente=" + idCliente + ", fechaCompra=" + fechaCompra + ", estado=" + estado
-				+ ", precioTotal=" + precioTotal + ", items=" + articuloCompras.size() + "]";
-	}
+    @Override
+    public String toString() {
+        // Ojo al toString: No imprimas el objeto cliente entero para evitar bucles infinitos
+        String nif = (cliente != null) ? cliente.getNif_cif() : "null";
+        return "Compra [id=" + id + ", idCliente=" + nif + ", fechaCompra=" + fechaCompra + ", estado=" + estado
+                + ", precioTotal=" + precioTotal + ", items=" + articuloCompras.size() + "]";
+    }
 
-	/**
-	 * Genera un código hash basado en el ID de la compra.
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
+    }
 
-	/**
-	 * Compara dos objetos Compra basándose en su ID.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Compra other = (Compra) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Compra other = (Compra) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
 }
