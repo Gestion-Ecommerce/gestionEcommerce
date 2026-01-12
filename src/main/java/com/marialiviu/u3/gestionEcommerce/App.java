@@ -7,7 +7,6 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 import java.util.Date;
-import java.util.Optional;
 import java.util.Scanner;
 
 import com.marialiviu.u3.gestionEcommerce.model.Articulo;
