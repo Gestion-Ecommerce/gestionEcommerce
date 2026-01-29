@@ -17,6 +17,48 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Representa una compra del sistema de gestión del e-commerce.
+ * <p>
+ * Esta entidad se mapea a la tabla <code>compras</code> de la base de datos
+ * mediante JPA. El identificador único de la entidad es el campo
+ * {@link #id}, que corresponde al ID de la compra.
+ * </p>
+ * * Campos principales:
+ * <ul>
+ * <li><b>id</b> - Identificador único de la compra (clave primaria).</li>
+ * <li><b>idCliente</b> - Identificador del cliente que realizó la compra.</li>
+ * <li><b>fechaCompra</b> - Fecha en la que se realizó la compra.</li>
+ * <li><b>estado</b> - Estado actual de la compra (PENDIENTE, ENVIADO,
+ * ENTREGADO).</li>
+ * <li><b>direccion</b> - Dirección de envío de la compra.</li>
+ * <li><b>precioTotal</b> - Precio total de la compra.</li>
+ * </ul>
+ * * Nota sobre igualdad y hashCode: la clase implementa {@code equals} y
+ * 	{@code hashCode} basándose en el {@code id} cuando éste está presente.
+ * Esto permite que la identidad lógica de la compra dependa de su ID,
+ * mientras que si el identificador es nulo se recurre al comportamiento por
+ * defecto de {@code Object} para evitar colisiones prematuras.
+ * * <p>
+ * <b>Ejemplo de uso:</b>
+ * </p>
+ * * <pre>{@code
+ * Compra compra = new Compra();
+ * compra.setId(1);
+ * compra.setIdCliente("12345678A");
+ * compra.setFechaCompra(new Date());
+ * compra.setEstado(Compra.EstadoCompra.PENDIENTE);
+ * compra.setPrecioTotal(99.99f);
+ * System.out.println(compra);
+ * }</pre>
+ * *
+ * @author Liviu y María
+ * * @version 1.0
+ * * @since 2025-11-27
+ * * @see ArticuloCompra
+ * @see Cliente
+ * 
+ */
 @Entity
 @Table(name = "compras")
 public class Compra {
@@ -51,6 +93,9 @@ public class Compra {
     private Cliente cliente;
     // ----------------------------------------------
     
+    /**
+	 * Constructor por defecto que inicializa los campos con valores predeterminados.
+	 */
     public Compra() {
         this.id = 0;
         this.fechaCompra = Date.from(Instant.now());
@@ -60,10 +105,11 @@ public class Compra {
     }
 
     /**
-     * Constructor MODIFICADO:
-     * Ahora recibe el OBJETO 'Cliente' en lugar del String 'idCliente'.
-     * Esto es obligatorio para que Hibernate pueda guardar la relación.
-     */
+	 * Constructor que crea un objeto Compra por parámetros. Si no se le
+	 * pasan parámetros, se pondrá un valor por defecto.
+	 * 
+	 * @param id, idCliente, fechaCompra, estado, precioTotal
+	 */
     public Compra(int id, Cliente cliente, Date fechaCompra, EstadoCompra estado, float precioTotal) {
         this.id = (id > 0) ? id : 0;
         this.cliente = cliente; // Asignamos el objeto real
@@ -141,19 +187,37 @@ public class Compra {
         this.cliente = cliente;
     }
     // -------------------------------------------------------------
-
+    /**
+     * Añade un ArticuloCompra a la compra y establece la relación.
+     * @param ac
+     */
     public void addArticuloCompra(ArticuloCompra ac) {
         if (ac == null) return;
         ac.setCompra(this);
         this.articuloCompras.add(ac);
     }
 
+    /**
+	 * Elimina un ArticuloCompra de la compra y desasocia la relación.
+	 * 
+	 * @param ac el ArticuloCompra a eliminar
+	 */
     public void removeArticuloCompra(ArticuloCompra ac) {
         if (ac == null) return;
         this.articuloCompras.remove(ac);
         ac.setCompra(null);
     }
 
+    /**
+	 * Representación en cadena de la instancia, útil para depuración.
+	 * <p>
+	 * Incluye el {@code id}, el {@code idCliente}, la {@code fechaCompra}, el
+	 * {@code estado}, el {@code precioTotal} y el número de
+	 * {@code items} en la compra.
+	 * </p>
+	 *
+	 * @return representación textual no nula de la entidad
+	 */
     @Override
     public String toString() {
         // Ojo al toString: No imprimas el objeto cliente entero para evitar bucles infinitos
@@ -162,6 +226,16 @@ public class Compra {
                 + ", precioTotal=" + precioTotal + ", items=" + articuloCompras.size() + "]";
     }
 
+    /**
+     * Calcula el código hash consistente con {@link #equals(Object)}.
+     * <p>
+     * Si {@code id} es mayor que 0, el hash se basa en dicho valor. En
+     * caso contrario se delega en {@link System#identityHashCode(Object)} para
+     * evitar que dos instancias sin identificador aparente colisionen como si
+     * tuvieran la misma identidad lógica.
+     * </p>
+     * @return el código hash de la instancia
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -170,6 +244,10 @@ public class Compra {
         return result;
     }
 
+    /**
+	 * Compara este objeto con otro para determinar igualdad basada en el
+	 * identificador {@code id}.
+	 */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

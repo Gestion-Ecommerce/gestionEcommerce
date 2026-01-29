@@ -19,6 +19,11 @@ import com.marialiviu.u3.gestionEcommerce.model.InformacionFiscal;
  * Aplicación interactiva por consola que replica las operaciones de `CrudDemo`.
  */
 public class App {
+	
+	/**
+	 * Punto de entrada de la aplicación.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		// Carga la configuración del persistence.xml
@@ -61,7 +66,9 @@ public class App {
 			System.out.println("\nAplicación finalizada");
 		}
 	}
-
+	/**
+	 * Imprime el menú de opciones.
+	 */
 	private static void printMenu() {
 		System.out.println("--- GESTIÓN ECOMMERCE (INTERACTIVO) ---");
 		System.out.println("1) Crear Artículo");
@@ -75,7 +82,11 @@ public class App {
 		System.out.println("9) Salir");
 	}
 
-	// ---------- CREAR ----------
+	/**
+	 * Crea un artículo de forma interactiva.
+	 * @param em
+	 * @param sc
+	 */
 	private static void createArticuloInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("Id (int): ");
@@ -103,7 +114,11 @@ public class App {
 			System.err.println("Error creando artículo: " + e.getMessage());
 		}
 	}
-
+	/**
+	 * Crea un cliente de forma interactiva.
+	 * @param em
+	 * @param sc
+	 */
 	private static void createClienteInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("NIF/CIF: ");
@@ -131,7 +146,12 @@ public class App {
 			System.err.println("Error creando cliente: " + e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Crea una compra interactiva.
+	 * @param em
+	 * @param sc
+	 */
 	private static void createCompraInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("NIF/CIF cliente para la compra: ");
@@ -173,14 +193,21 @@ public class App {
 			System.err.println("Error creando compra: " + e.getMessage());
 		}
 	}
-
+	/**
+	 * Obtiene el siguiente id disponible para una compra.
+	 * @param em
+	 * @return
+	 */
 	private static int getNextCompraId(EntityManager em) {
 		TypedQuery<Integer> q = em.createQuery("SELECT MAX(c.id) FROM Compra c", Integer.class);
 		Integer max = q.getSingleResult();
 		return (max == null) ? 1 : (max + 1);
 	}
 
-	// ---------- LISTAR ----------
+	/**
+	 * Lista todos los artículos, clientes y compras.
+	 * @param em
+	 */
 	private static void listAll(EntityManager em) {
 		System.out.println("--- ARTÍCULOS ---");
 		List<Articulo> articulos = em.createQuery("SELECT a FROM Articulo a", Articulo.class).getResultList();
@@ -193,7 +220,11 @@ public class App {
 		compras.forEach(System.out::println);
 	}
 
-	// ---------- ACTUALIZAR ----------
+	/**
+	 * Actualiza el precio y/o stock de un artículo.
+	 * @param em
+	 * @param sc
+	 */
 	private static void updateArticuloInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("Id artículo a actualizar: ");
@@ -215,7 +246,12 @@ public class App {
 			System.err.println("Error actualizando artículo: " + e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Actualiza el email de un cliente.
+	 * @param em
+	 * @param sc
+	 */
 	private static void updateClienteInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("NIF/CIF cliente a actualizar: ");
@@ -234,7 +270,12 @@ public class App {
 			System.err.println("Error actualizando cliente: " + e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Actualiza el estado de una compra (PENDIENTE, ENVIADO, ENTREGADO).
+	 * @param em
+	 * @param sc
+	 */
 	private static void updateCompraEstadoInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("Id compra a actualizar: ");
@@ -260,7 +301,11 @@ public class App {
 		}
 	}
 
-	// ---------- BORRAR ----------
+	/**
+	 * Borra una compra por su id.
+	 * @param em
+	 * @param sc
+	 */
 	private static void deleteCompraInteractive(EntityManager em, Scanner sc) {
 		try {
 			System.out.print("Id compra a borrar: ");
